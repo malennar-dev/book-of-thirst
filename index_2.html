@@ -1,0 +1,1057 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Rotation Rulebook</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍺</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=IBM+Plex+Mono:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<script>
+/* ================================================================
+   ▼▼▼  EVERYTHING YOU EDIT IS IN THIS BLOCK  ▼▼▼
+   It runs from here down to the line that says STOP EDITING.
+   Below that is design and plumbing you can ignore.
+   ================================================================ */
+
+// ============================================================
+//  THE ROTATION RULEBOOK  —  this is the only file you need to edit.
+// ============================================================
+//
+//  META below sets the revision stamp shown in the title block.
+//  Bump it whenever you change something.
+//
+//  Each game in GAMES is an object. The fields:
+//
+//    slug    unique id, lowercase-with-dashes. Used for the #link.
+//    name    display name
+//    code    sheet code, e.g. "TBL-01"
+//    cat     category key — must match one of the CATEGORIES below
+//    tag     category label shown on the sheet
+//    spec    { Label: "value", ... } — the grey strip of stats
+//    note    optional blue callout at the top of the sheet
+//    setup   [ "step", "step" ]   numbered list
+//    play    [ "step", "step" ]   numbered list
+//    phases  [ {title, steps:[]} ] use INSTEAD of setup/play for
+//            multi-phase games
+//    cards   [ ["A", "what it means"], ... ] the card table
+//    sections[ {title, steps:[]} ] extra numbered sections
+//    close   optional closing paragraph
+//    drink   [ "rule" ] the red panel on the right
+//    varies  one string — the "varies by house" panel
+//
+//  Every field is optional except slug, name, code, cat, tag.
+//  Use straight quotes. Watch your commas. If the page goes blank,
+//  you have a typo — open the browser console to see where.
+// ============================================================
+
+const META = { revision: "R", updated: "2026.09" };
+
+const CATEGORIES = [
+  { key: "table",    label: "Table & throwing" },
+  { key: "race",     label: "Race" },
+  { key: "cards",    label: "Cards" },
+  { key: "gambling", label: "Gambling" },
+  { key: "outdoor",  label: "Outdoor" },
+  { key: "party",    label: "Party & endurance" }
+];
+
+const GAMES = [
+  {
+    slug:"beer-pong", name:"Beer Pong", code:"TBL-01", cat:"table", tag:"Table & throwing",
+    spec:{Players:"2v2 (1v1 works)",Gear:"8ft table, 20 cups, 2 balls",Runtime:"10–20 min",Tempo:"Rowdy"},
+    setup:[
+      "Rack 10 cups per side in a triangle, tip pointed at the opponents, back row flush with the table edge.",
+      "Fill each cup with 2–3 oz. If the table drinks separately and the cups are water, the losers still owe the equivalent.",
+      "First possession goes eye to eye. One player from each team steps up and locks eyes with their opposite. \"Eye to eye\" is what gets said out loud, and it doubles as the countdown — both shooters release on it, at the same time.",
+      "You hold eye contact through the whole thing. No talking, and no dropping your eyes to line up the cups. Both make or both miss and it runs again until one sticks.",
+      "Whoever makes it, their team starts. That's all eye to eye decides — it has nothing to do with who shoots first once play is under way.",
+      "Shooting order inside a team can change between turns. You aren't locked into whoever went first."
+    ],
+    play:[
+      "Teams alternate turns. Each player shoots one ball per turn.",
+      "A made shot means the opponents pull that cup and drink it right away.",
+      "If both partners make it in the same turn, you get the balls back and shoot again.",
+      "Elbows stay behind the table edge — but the violation has to be called while the shot is in the air. Once the ball is in, it's too late.",
+      "Pull made cups promptly. Sitting on them is its own penalty."
+    ],
+    sections:[
+      {title:"Re-racks and the final two", steps:[
+        "One re-rack per team, called at the start of a turn before anyone shoots.",
+        "On top of that, a gentleman's re-rack is available once a side is down to two cups — or centering the last cup if only one is left.",
+        "The final two cups are straight shooting. Lip carry-over and double dips are dead there, and a bounce only takes one cup instead of two."
+      ]},
+      {title:"Bounces, lips and rebounds", steps:[
+        "A bounce takes two cups, but the defenders may swat a bouncing ball before it lands.",
+        "If a ball lips one or more cups and drops into a different one, every cup it touched comes out.",
+        "If a ball bounces back your way and you catch it clean before it hits the ground, you get another shot.",
+        "The other team names the shot for that rebound: hut-hut, lefty, behind the back, free throw, kareem, or bust a load."
+      ]},
+      {title:"Called shots, double dips, graveyard", steps:[
+        "Each shooter can call a cup once per game. Name it before the ball leaves your hand.",
+        "Make the called cup and it comes out along with one more of the opposing team's choosing.",
+        "Miss the call but land in a different cup and only that cup comes out.",
+        "Double dip: if a made cup isn't pulled promptly, shoot at it again. Make it and that cup comes out with two others, and the balls come back.",
+        "Graveyard (optional): made cups line up on the side. Bounce a shot into one of those and it goes back into the opponents' rack — you just handed a cup back."
+      ]},
+      {title:"Closing it out", steps:[
+        "When the last cup falls, the trailing team gets redemption.",
+        "Balls back on the final two does not skip redemption — and graveyard is still live, so a victory shot taken for fun can cost you.",
+        "Both redemption shooters make: balls back, keep going.",
+        "One makes and one misses: the one who made keeps shooting until they miss.",
+        "Trick and special shots still apply right up until the final two cups.",
+        "Clear every remaining cup and it goes to chandelier."
+      ]},
+      {title:"Chandelier (overtime)", steps:[
+        "Three cups in a triangle with a fourth balanced on top of them.",
+        "The top cup goes first. Nothing counts on the base until it's gone.",
+        "Make the top cup and it comes out.",
+        "Knock it over and it comes out anyway.",
+        "Knock it over and into one of the base cups and both come out."
+      ]}
+    ],
+    drink:[
+      "Cup made = that cup gets drunk immediately, by whoever the team sends.",
+      "Losers finish every cup left standing on their side."
+    ],
+    varies:"Graveyard is optional — agree on it before the first rack. The rebound shot names are house vocabulary, so spell them out for anyone new to the table."
+  },
+  {
+    slug:"beer-die", name:"Beer Die", code:"TBL-02", cat:"table", tag:"Table & throwing",
+    spec:{Players:"2v2, partners side by side",Gear:"8ft table, 1 die, 4 solo cups",Runtime:"15–30 min",Tempo:"Skill-heavy"},
+    note:"Outdoor game. Concrete or grass — somewhere a die can skitter and a cup can go over without anyone caring.",
+    setup:[
+      "Two players per side, partners standing side by side. You face the other team down the length of the table; nobody plays diagonal.",
+      "Solo cup is the regulation cup. Each player sets theirs in from their corner, roughly a hand's width off both edges.",
+      "Fill cups a third to half full and keep a full beer within reach — sinks empty a cup fast.",
+      "Agree on the height plane before the first throw."
+    ],
+    play:[
+      "Throw underhand from behind your own table edge. The die has to arc above the agreed height plane.",
+      "A legal throw lands on the opponents' half and bounces off the table.",
+      "Defense may catch the die one-handed after it leaves the table to deny the point. Two hands, a body trap, or a drop and the point stands.",
+      "A short toss, or one landing on the dividing line, is dead and play passes. It is not a point for the other team.",
+      "A height violation called in time is a re-toss, not a score either way.",
+      "Game to 11, win by 2."
+    ],
+    sections:[
+      {title:"Scoring", steps:[
+        "1 point — the die hits the opponents' side and falls to the ground uncaught.",
+        "2 points — the die contacts a cup, on the fly or off the bounce, and ends up on the floor.",
+        "3 points — a sink. The die lands in a cup.",
+        "Touch both cups on the way down and it's still 2. The scale counts what happened to the die, not how many cups it clipped.",
+        "Names get swapped around table to table. Sink is universal; tink and dink both get used for the 1 and the 2 depending on who you ask, so say the number, not the name."
+      ]},
+      {title:"Calling the face", steps:[
+        "If a die bounces back onto the table and settles there, the throwing team can shout a number, 1 through 6, before it stops moving.",
+        "Call the face it lands on and you throw again.",
+        "Miss the call and nothing happens. No point, no penalty, no loss of turn."
+      ]},
+      {title:"FIFA", steps:[
+        "Agree on FIFA before the first throw. It changes how the defense stands, so it isn't something to introduce at 8–8.",
+        "It applies to a toss that misses the table completely — the throw itself is worth nothing, and FIFA is the defense's chance to turn it into something.",
+        "A defender kicks the die up off the floor. Feet only, no knees, and you cannot catch your own kick — it has to be taken by your partner.",
+        "The die can be kept alive up to three kicks in one sequence, so it can go back and forth before anyone commits to the catch.",
+        "A completed FIFA is 1 point to the defense however many kicks it took. Volleying keeps the play alive; it doesn't multiply the score.",
+        "Three FIFA points per team per game is the usual cap.",
+        "You cannot win on a FIFA. If it would land you on the winning number, the game doesn't end there."
+      ]},
+      {title:"Dead throws", steps:[
+        "A die that bounces off your own side, or rolls back and settles among your own cups, is dead. Not a win, not a penalty, nothing to anybody.",
+        "Same for a short toss or one that catches the dividing line — dead, and play passes.",
+        "None of these hand the other team a point. The only way to lose a point is not to score one."
+      ]},
+      {title:"Redemption", steps:[
+        "Optional, and agreed before the first throw rather than argued about at 10–10.",
+        "When a team reaches the winning score, the other side keeps throwing until they fail to score.",
+        "If you also play FIFA, the usual pairing is that a FIFA can't be the throw that ends it."
+      ]}
+    ],
+    drink:[
+      "Every point scored on you is a drink.",
+      "A sink means that player kills and refills their cup, whatever the score is.",
+      "Losing team finishes whatever is left in their cups."
+    ],
+    varies:"The height plane, one-handed catch enforcement, and 11 versus a quick game to 7. Some tables make a completed FIFA cost the thrower a defensive rotation instead of paying the defense a point. Sink value is the big one: 3 is standard on a dry table, while 5 comes from aquatic beer dye — where the cup bounce is worth 3 too, so taking the 5 without the 3 makes sinks disproportionately swingy."
+  },
+  {
+    slug:"beer-ball", name:"Beer Ball", code:"TBL-03", cat:"table", tag:"Table & throwing",
+    spec:{Players:"2v2 (scales to 3v3)",Gear:"Long table, 1 ball, 1 can each",Runtime:"5–10 min",Tempo:"Frantic"},
+    setup:[
+      "Two players per side, standing at opposite ends of a long table.",
+      "Each player stands an unopened can upside down in their own corner, about a finger length in from each edge.",
+      "No cups and no rack. The cans are both the target and the drink — bottles don't work.",
+      "Everyone stays behind their end line while the ball is live."
+    ],
+    play:[
+      "Teams alternate, one throw per turn. You're trying to hit an opposing can directly — no bouncing off the table first.",
+      "When your throw connects, your teammate cracks their can and starts drinking. The thrower never drinks — you throw or you chug, not both.",
+      "The team that got hit chases the ball down, gets back to the table, and slams it down while yelling \"down.\" The drinker stops on the word.",
+      "Finished a can? Hold it upside down over your head so the table can see it's empty.",
+      "Once one can on a side is gone, the surviving can moves to the middle of that end and its owner stops throwing for the rest of the game. They drink only; their partner does all the throwing.",
+      "First team to empty both cans, crush them, and slam them on the table wins."
+    ],
+    sections:[
+      {title:"Sting pong (optional variant)", steps:[
+        "Off unless everyone agrees to it beforehand, and only with people who actually want to get hit with a ping pong ball.",
+        "If a thrower misses the can and the table entirely and the defense catches the ball clean out of the air, they get to throw it back at the thrower.",
+        "It has to be quick — a snap retaliation off the catch, not a wind-up while everyone stands around watching.",
+        "Connect and the thrower owes a three-second sip of their drink. Body shots only.",
+        "If the return throw knocks a drink over and nobody catches it before it hits the ground, tough luck. Finish whatever's left in it and pour a new one — no do-over, and nothing owed by the thrower.",
+        "No published ruleset covers any of this, so the three seconds is the house's number. The name is also already taken: in print, sting pong is a ping pong game where the winner of each point pegs the loser in the chest."
+      ]}
+    ],
+    drink:[
+      "Only the non-throwing teammate drinks on a hit.",
+      "The window runs from the hit until the defense slams the ball and calls \"down.\"",
+      "Can upside down over your head is the signal that it's finished."
+    ],
+    varies:"Whether a knocked-over can costs you anything, and whether the defense can stop the drinking by catching the ball clean instead of retrieving it and slamming."
+  },
+  {
+    slug:"anchorman", name:"Anchorman", code:"TBL-04", cat:"table", tag:"Table & throwing",
+    spec:{Players:"3v3 or 4v4",Gear:"Table, 1 pitcher, a quarter each",Runtime:"10–20 min",Tempo:"Precision"},
+    setup:[
+      "Two teams lined up on opposite sides of a long table. Six feet of hard surface is about right, and wood bounces better than anything else.",
+      "One big pitcher or mug in the middle, filled with beer.",
+      "Every player gets a quarter.",
+      "Each team names its anchorman — last in the order, and the one who settles the tab at the end."
+    ],
+    play:[
+      "Bounce your quarter off the table and into the pitcher.",
+      "You keep going until you make it. Only once your quarter is in does the next teammate start.",
+      "Bounce the coin flat rather than on its edge. Flat gives a higher bounce and a better angle into the mug.",
+      "First team to land every quarter wins."
+    ],
+    drink:[
+      "The losing team passes the pitcher down their line, each player drinking as much as they can stomach.",
+      "Whatever is still in it when it reaches the anchorman is theirs to finish. That's the job."
+    ],
+    varies:"Quarters or a ping pong ball, whether the pitcher gets topped up between rounds, and whether the anchorman finishes the remainder or takes the whole thing solo."
+  },
+  {
+    slug:"pizza-box", name:"Pizza Box", code:"TBL-05", cat:"table", tag:"Table & throwing",
+    spec:{Players:"3–10",Gear:"Pizza box, a coin, a marker",Runtime:"Open-ended",Tempo:"Builds"},
+    note:"The board is blank when you start and covered when you finish. By the end it's a document of the night, which is most of the appeal — keep the box.",
+    setup:[
+      "Flat pizza box or sheet of cardboard on the table, everyone gathered around it.",
+      "One coin and one marker. Beer or seltzer suits this better than anything strong — the board fills up faster than you expect.",
+      "Nothing is drawn yet. Round one is what creates the board."
+    ],
+    play:[
+      "Round one: each player flips the coin onto the box, going counter-clockwise. Miss the board entirely and you take a sip, then go again.",
+      "Once everyone has flipped, each player draws a shape around where their coin landed and writes their name inside it.",
+      "Every round after that, flip onto the box and see where you land.",
+      "Land on blank cardboard and you draw a new shape there and write a rule inside it. Anything you want.",
+      "Land on an existing shape and you do what it says. Land on someone's name shape from round one and you drink.",
+      "It ends when the board is covered, or when the table has had enough."
+    ],
+    drink:[
+      "Whatever the shape you land on tells you.",
+      "A name shape from round one is a straight drink.",
+      "Missing the board costs a sip before you re-flip."
+    ],
+    varies:"How ruthless the written rules get, whether a rule may name a specific person, and whether a coin sitting half on a line counts for the shape or the blank."
+  },
+  {
+    slug:"stack-cup", name:"Stack Cup", code:"TBL-06", cat:"table", tag:"Table & throwing",
+    spec:{Players:"4–10",Gear:"Big table, 2 balls, 2–3 cups each",Runtime:"15–30 min",Tempo:"Chaotic"},
+    setup:[
+      "Cups in a ring on the table with the rims touching, all filled to the same level.",
+      "One cup in the middle, filled to the top. That one is the problem.",
+      "Two ping pong balls in play.",
+      "Everyone stands. This isn't a sitting game."
+    ],
+    play:[
+      "Two players opposite each other take a cup, cheers, and drink it. That's the start.",
+      "Your job is to bounce your ball into your own empty cup. Keep trying until you land it.",
+      "Make it and pass your cup to the player on your left. Now they have to land theirs.",
+      "Make it on your first attempt and you can pass to anyone at the table, not just your left. That's the whole strategy.",
+      "Land yours before the player on your left has landed theirs and you stack your cup inside theirs. They take a fresh cup off the table, drink it, and play on.",
+      "Miss and land your ball in a full cup on the table and you drink that cup, then add it to your stack.",
+      "Mind the middle one.",
+      "It ends when the table's cups are gone. Whoever is left holding the fullest cup loses."
+    ],
+    drink:[
+      "Every cup handed to you gets drunk before play carries on.",
+      "Bounce into a table cup by accident and you drink it.",
+      "Loser is whoever finishes with the most still in front of them."
+    ],
+    varies:"One ball or two, cups per player, and whether a stacked player has to finish the new cup before their next throw."
+  },
+  {
+    slug:"flip-cup", name:"Flip Cup", code:"RCE-01", cat:"race", tag:"Race",
+    spec:{Players:"Two lines, 4+ a side",Gear:"Table, 1 cup each",Runtime:"2–5 min per round",Tempo:"Loud"},
+    setup:[
+      "Teams line up facing each other down a long table, one player per seat, matched one-to-one.",
+      "Every player gets the same pour — 2–3 oz is standard. Match them honestly.",
+      "Cups start upright on the table with the pour still in them, set so the bottom lip hangs slightly over the edge.",
+      "If one team is a player short, their lead goes first and then drops to the back of the line to go again. Turns come out even."
+    ],
+    play:[
+      "The two lead players clink cups, tap the table, and go.",
+      "Drink your cup clean, set it back upright on the edge with the bottom lip overhanging.",
+      "Flick the bottom lip upward with one finger — the bottom, not the rim. It's a half turn, not a full one: the cup has to end face down and stay there.",
+      "You keep flicking until you land it. No time limit, no help from teammates.",
+      "Only once your cup is down does the next player start.",
+      "First team to land their final cup wins."
+    ],
+    sections:[
+      {title:"Elimination variant", steps:[
+        "Each round, the losing team pulls a player off the table.",
+        "The cups don't go anywhere. A remaining player covers the empty seat, going twice in the round — once for themselves and once for whoever left.",
+        "That's the same mechanic as an uneven line: go, drop to the back, go again.",
+        "It compounds. Every round you drop, one fewer body carries the same number of cups.",
+        "It's over when a team has nobody left at the table. The side still standing wins."
+      ]}
+    ],
+    drink:[
+      "The cup is the drink — there's no extra penalty mid-round.",
+      "Losing team runs it back, or the last player in line takes a solo cup."
+    ],
+    varies:"Whether a cup that lands and then tips counts, and whether you may right the cup with two hands before flicking."
+  },
+  {
+    slug:"kings-cup", name:"Kings Cup", code:"CRD-01", cat:"cards", tag:"Cards",
+    spec:{Players:"4–10",Gear:"Deck, 1 unopened can",Runtime:"20–40 min",Tempo:"Social"},
+    setup:[
+      "An unopened can stands in the middle of the table. It's the clock and the forfeit at the same time.",
+      "Spread the whole deck face down in a ring around it, cards overlapping slightly.",
+      "Everyone needs their own full drink — you'll be sipping from it constantly, never from the can."
+    ],
+    play:[
+      "Going clockwise, each player draws one card, flips it face up, and does what it says.",
+      "Once you've done what the card says, slide it under the can's tab — in between the tab and the can itself. Every card played goes under there, and the tab lifts a little more each time.",
+      "Break the ring while drawing and you drink.",
+      "The game ends one of two ways: the fourth king comes out, or the can cracks. It has to visibly crack — a hiss on its own doesn't count.",
+      "Whoever cracks it drinks it."
+    ],
+    cards:[
+      ["A","Waterfall — everyone drinks at once, starting with the drawer. You can't stop until the person to your right stops."],
+      ["2","You — hand out two drinks."],
+      ["3","Me — take three drinks."],
+      ["4","Floor — last person to touch the floor drinks."],
+      ["5","Guys — guys drink."],
+      ["6","Chicks — girls drink."],
+      ["7","Heaven — last person to point at the ceiling drinks."],
+      ["8","Mate — pick a mate. They drink whenever you drink for the rest of the game."],
+      ["9","Rhyme — say a word, go around rhyming. First to blank or repeat drinks."],
+      ["10","Categories or never have I ever — drawer's choice. Categories: name one and go around listing items, first to blank drinks. Never have I ever: everyone holds up three fingers, the drawer names something they've never done and anyone who has drops a finger, then it carries around the circle with each player naming one of their own. First to put all three fingers down takes three sips — if two go down on the same call, both do."],
+      ["J","Make a rule — any rule you want, live for the rest of the game. Break it, drink."],
+      ["Q","Question master — until the next queen, anyone who answers a question you ask drinks."],
+      ["K","King — you take over the king's role, whichever one the table settled on before the game. Spelled out below."]
+    ],
+    sections:[
+      {title:"The king's role", steps:[
+        "Settle this before the first card: does the king carry thumb master, beer bitch, or both.",
+        "Thumb master — at any point you can quietly put your thumb on the edge of the table. Everyone else has to notice and follow. Last one down drinks.",
+        "Beer bitch — you fetch drinks for anyone at the table who asks for one.",
+        "If the table doesn't decide, the king carries both and one person holds them together. That's the version worth playing: you can go for the thumb whenever you like, but anyone can keep you away from the table by asking for another beer.",
+        "Only one person holds it at a time, and it transfers the moment the next king comes out."
+      ]}
+    ],
+    drink:[
+      "Everything comes from your own drink. The can is never poured into and never shared.",
+      "Rules from jacks stack.",
+      "Whoever cracks the can drinks the can."
+    ],
+    varies:"Nearly all of it — the number-to-rule mapping is regional and this is one common set, not the only one. If you ever want a third king's role, social (everybody drinks at once) and buffalo (off-hand only for the rest of the game) both fit the same slot."
+  },
+  {
+    slug:"ride-the-bus", name:"Ride the Bus", code:"CRD-02", cat:"cards", tag:"Cards",
+    spec:{Players:"1 rider, 1 dealer",Gear:"Deck of cards",Runtime:"5–20 min",Tempo:"Solo suffering"},
+    note:"The bus on its own — no deal, no pyramid. This is what a loser gets sent to, and it also works cold as a standalone punishment.",
+    setup:[
+      "Shuffle the deck. The dealer holds it. Nothing gets dealt out to anybody.",
+      "One person rides. Everyone else watches and counts.",
+      "Settle whether aces are high or low before the first flip."
+    ],
+    play:[
+      "Red or black? The dealer flips a card.",
+      "Higher or lower than that card? The dealer flips the next one. An exact match counts as wrong.",
+      "Inside or outside the two cards showing? Dealer flips again.",
+      "Name the suit. Dealer flips the fourth.",
+      "Miss any of the four and you drink, and the run dies — back to red or black with fresh cards.",
+      "Hit all four back to back and you're off the bus. That's the only way off."
+    ],
+    drink:[
+      "One drink per wrong call is the standard.",
+      "Harder tables scale it to the question: 1 for colour, 2 for higher/lower, 3 for inside/outside, 4 for the suit."
+    ],
+    varies:"Aces high or low, whether the run resets to question one or only back a step, and whether the rider drinks per miss or takes one long pull at the end of a failed run."
+  },
+  {
+    slug:"death-square", name:"Death Square", code:"CRD-03", cat:"cards", tag:"Cards",
+    spec:{Players:"3–8",Gear:"Deck of cards",Runtime:"20–40 min",Tempo:"Attritional"},
+    setup:[
+      "Shuffle the deck. Deal nine cards face up in a 3×3 square. The dealer keeps the rest of the deck in hand.",
+      "Every pile starts one card tall. Whatever is showing on top is what gets called against.",
+      "Player to the dealer's left goes first. Play moves left from there.",
+      "Aces are low."
+    ],
+    play:[
+      "On your turn, pick any pile and call higher or lower against the card showing on it. The dealer deals the next card off the deck onto that pile.",
+      "Right, and your streak builds. Wrong, and you drink the count — but you're still up. The streak just goes back to zero.",
+      "You stay on the square until you string together three correct calls in a row, or whatever higher number the player before you set. That is the only way out of your turn.",
+      "Clear it and the dealer picks up the pile you started that turn on. It leaves the square for good.",
+      "Call it exactly — the new card matches the rank showing — and you drink half the cards underneath, rounding up on odds.",
+      "The game ends when the deck runs out or every pile has been picked up."
+    ],
+    sections:[
+      {title:"The challenge", steps:[
+        "Stack three or more correct calls on a single pile and the next player has to match that number before they can get out of their turn.",
+        "Move around the square instead and it takes four or more across the piles to set a challenge. Same deal for whoever is next.",
+        "Clear the challenge with no misses and it doesn't die — it carries to the player after you, at your number.",
+        "Miss once and the challenge is dead. You're back to needing a plain three to get out, and so is everyone after you."
+      ]},
+      {title:"The count", steps:[
+        "Your drink is measured in cards, not seconds. Count what's underneath the card that was just placed.",
+        "The other players say the numbers out loud, going around the circle, starting with whoever is up next.",
+        "Mess up the count — wrong number, or too slow — and you drink their full original time. Double it if the table is feeling thirsty.",
+        "If the person drinking empties their cup before the count is done, whoever broke the count picks it up from where it broke. The original player gets a fresh drink and the turn comes back to them."
+      ]},
+    ],
+    drink:[
+      "Wrong call: drink for the number of cards under the one just placed. You stay up and keep calling.",
+      "Exact match on rank: half the cards underneath, rounded up.",
+      "Broke someone's count: their full original time, or double."
+    ],
+    varies:"Aces are low here — some tables play them high or caller's choice. Also whether the pile picked up is the one you started on or the one you finished on, and how hard the table enforces \"too slow\" on a count."
+  },
+  {
+    slug:"drink-in-denile", name:"Drink in DeNile", code:"CRD-04", cat:"cards", tag:"Cards",
+    spec:{Players:"3–8",Gear:"Deck of cards",Runtime:"25–45 min",Tempo:"Slow burn"},
+    note:"The river, not the state of mind — which is why there's a pyramid in the middle of it. Three phases, and the last one is the bus.",
+    phases:[
+      {title:"Phase 1 — The deal", steps:[
+        "The dealer works around the table one player at a time, asking all four questions before moving on to the next person. Everyone finishes holding four cards.",
+        "Red or black? Higher or lower than your first? Inside or outside the two you're holding? Name the suit.",
+        "Pick a scale before you start and stick to it. Full scale: a wrong call costs you that question's number, 1 through 4, and a right call lets you hand out the same. Simple: one sip for every wrong call, nothing handed out.",
+        "Keep your four cards face down in front of you. Nobody shows anybody."
+      ]},
+      {title:"Phase 2 — The pyramid", steps:[
+        "The dealer builds a face-down pyramid from the rest of the deck: a row of 5, then 4, 3, 2, and 1 on top.",
+        "Flip the bottom row first, one card at a time, working upward.",
+        "Hold a card matching the flipped rank and you can lay it down and hand out drinks equal to the row — 1 at the bottom, up to 5 at the top.",
+        "Bluffing is allowed. Get called without the card and you drink double what you tried to give.",
+        "Cards you lay down leave your hand. Emptying it is the entire point."
+      ]},
+      {title:"Phase 3 — The bus", steps:[
+        "Whoever ends the pyramid holding the most cards rides.",
+        "Tied on card count: the dealer flips off the deck and the first tied player to match a card still in their hand is safe. Keep flipping — players drop out as they match — until one is left. That's your rider.",
+        "If a flip matches more than one of them at once, rock paper scissors decides which of those two is safe.",
+        "The rider runs the four questions — red or black, higher or lower, inside or outside, suit — and has to hit all four in a row to get off.",
+        "Miss one and it resets to the top with fresh cards. Full rules on sheet CRD-02.",
+        "Want a different rhythm to close the night? Swap in the face-card bus from GMB-02 instead. It's pure draw with no guessing, so it runs either very short or very long — a different kind of ending than the four questions."
+      ]}
+    ],
+    drink:[
+      "Phases 1 and 2 are given and taken as listed, on whichever scale the table picked.",
+      "On the bus, one drink per wrong call.",
+      "The bus is where the night actually gets decided. Riders have gone twenty minutes."
+    ],
+    varies:"Whether phase 1 runs the full 1–4 scale or flat sips, whether bluffing is live in the pyramid, pyramid row size, and aces high or low."
+  },
+  {
+    slug:"sip-poker", name:"Sip Poker", code:"GMB-01", cat:"gambling", tag:"Gambling",
+    spec:{Players:"3–8",Gear:"Deck of cards, everyone's drink",Runtime:"30–60 min",Tempo:"Slow and mean"},
+    note:"Not Irish poker — that name belongs to a different game, the four-card red/black, higher/lower, inside/outside, suit run, which already lives here as phase one of Drink in DeNile. This is actual poker with sips for chips.",
+    setup:[
+      "Play whatever variant the table already knows. Hold'em is the usual pick because everyone can follow it without a rules argument.",
+      "Your drink is your stack. A sip is a chip.",
+      "Agree what one sip means before the first hand — a real mouthful, or a count of two — so nobody's chips are worth more than anybody else's.",
+      "Deal as normal. Blinds, if you use them, are one sip and two."
+    ],
+    play:[
+      "Bets, calls and raises are all counted in sips. Nothing gets drunk while the hand is still live.",
+      "At showdown, everyone who didn't win drinks what they committed. Fold early and you only owe what you'd already put in.",
+      "The winner drinks nothing. That's the whole prize.",
+      "Empty drink means you're out of chips."
+    ],
+    sections:[
+      {title:"Busting and buying back in", steps:[
+        "Finishing your drink is busting out. You're done unless the table lets you back in.",
+        "Buying back in is a group decision, not an entitlement. The simple version is another beer.",
+        "The version that actually works: buy back in with a two-shot mixed drink, and add a shot every time you bust again. Third buy-in is three shots, and up from there.",
+        "That escalator is the whole point. Without it the player with nothing left to lose shoves every hand, and it stops being poker."
+      ]}
+    ],
+    drink:[
+      "Losers of a hand drink what they committed to the pot.",
+      "Folding caps your loss at whatever was already in.",
+      "Empty drink means you're out until the table buys you back."
+    ],
+    varies:"Which poker variant, what counts as one sip, whether the winner drinks nothing or hands the pot out as sips instead, and how steep the buy-back escalator gets."
+  },
+  {
+    slug:"bus-face-cards", name:"Ride the Bus (Face Cards)", code:"GMB-02", cat:"gambling", tag:"Gambling",
+    spec:{Players:"1 rider, 1 dealer",Gear:"Deck of cards",Runtime:"2–20 min",Tempo:"Pure luck"},
+    note:"A different bus, used in place of the four-question run at some tables. Same job — one person stuck until the deck lets them go — but there's no guessing in it at all.",
+    setup:[
+      "The dealer lays out a row of five face-down cards from the deck in front of the rider.",
+      "No calls and no guesses. This one is entirely draw."
+    ],
+    play:[
+      "The rider flips left to right, one card at a time.",
+      "Number card — safe. Keep going.",
+      "Face card or ace — drink for it, then the run is dead.",
+      "The turned card goes back in, the dealer reshuffles and lays five fresh face-down cards, and the rider starts again from the left.",
+      "Clear all five without turning a face card and the rider is off."
+    ],
+    drink:[
+      "Jack is 1, queen 2, king 3, ace 4.",
+      "That's the whole scale. There's nothing else to take."
+    ],
+    varies:"Row length — five is standard, some tables run seven. Whether the entire row resets or only from the card you turned. Whether aces count at all."
+  },
+  {
+    slug:"horse-race", name:"Horse Race", code:"GMB-03", cat:"gambling", tag:"Gambling",
+    spec:{Players:"3+ and an announcer",Gear:"Deck of cards",Runtime:"5–10 min a race",Tempo:"Betting"},
+    setup:[
+      "Pull the four aces and lay them in a row. Those are the horses.",
+      "Deal seven cards face down in a line running perpendicular to the aces, so the whole thing makes an L. Those are the mile markers.",
+      "One person announces and deals. They don't bet.",
+      "Everyone else picks a suit and bets a number of drinks on it."
+    ],
+    play:[
+      "The announcer flips cards off the deck one at a time and calls each suit.",
+      "The matching ace moves forward one marker.",
+      "The first time a horse arrives at a marker, flip that marker card. If it matches that horse's suit, the horse goes back a space.",
+      "First ace past the last marker wins.",
+      "Settle up, reshuffle, run it back."
+    ],
+    drink:[
+      "Back the winning horse and you hand out the drinks you bet.",
+      "Back anything else and you drink what you bet.",
+      "The announcer neither bets nor drinks for the race."
+    ],
+    varies:"Whether the faltering rule — flipping the mile markers — is on at all, how many markers you lay out, and whether the announcer gets to bet."
+  },
+  {
+    slug:"dizzy-bat", name:"Dizzy Bat", code:"OUT-01", cat:"outdoor", tag:"Outdoor",
+    spec:{Players:"Any number, one at a time",Gear:"Wiffle bat, wiffle ball, a beer each",Runtime:"2–3 min a turn",Tempo:"Spectacle"},
+    note:"Outdoors, on grass, with the area cleared. The batter genuinely cannot see straight and there is a bat involved — keep someone reasonably sober spotting, and everyone else well back.",
+    setup:[
+      "Take a wiffle bat, cut the knob off the handle so it's open, and drill a small choke hole about four inches from the top.",
+      "The batter covers the choke hole with a finger while somebody pours a beer into the bat through the open handle.",
+      "Pick a turn order. One person bats, one pitches and counts, everyone else stands clear."
+    ],
+    play:[
+      "The batter chugs the whole beer out of the bat while the group counts the seconds out loud.",
+      "Turn the bat upside down to show it's empty. That's the proof, and it locks in your number.",
+      "Forehead on the top of the bat, then spin — one spin for every second it took you to chug.",
+      "Three seconds to find your feet. That's all you get.",
+      "The pitcher tosses the ball. Connect and you're done.",
+      "Miss and you spin three more times and swing again. Keep going until you hit it."
+    ],
+    drink:[
+      "The beer in the bat is the whole drink.",
+      "Chugging fast means fewer spins, so the count punishes you twice over."
+    ],
+    varies:"Whether an empty can stands in for the wiffle ball, how many extra spins a miss costs, and whether the pitcher is allowed to make it difficult."
+  },
+  {
+    slug:"beer-n-seek", name:"Beer-n-Seek", code:"OUT-02", cat:"outdoor", tag:"Outdoor",
+    spec:{Players:"Two or more teams",Gear:"Drinks to hide, a defined area",Runtime:"10–20 min",Tempo:"Scramble"},
+    note:"House invention — there's no published ruleset for this one, so everything here is whatever the table agreed on. Settle the format out loud before anyone hides anything.",
+    setup:[
+      "Split into teams and decide the format before you start.",
+      "The hiding side stashes drinks equal to the number of players seeking. One drink per seeker.",
+      "If more than one team is hunting at once, label each drink with the team it belongs to.",
+      "Define the search area out loud, and name the no-go spots — neighbours' yards, anything needing a ladder, anything you'd rather not explain later."
+    ],
+    play:[
+      "Format one: teams go one at a time and get timed. Fastest clear wins.",
+      "Format two: everyone hunts at once. Faster, and considerably worse behaved.",
+      "In the simultaneous version you can relocate a drink that isn't yours. Move it, don't bury it — the point is a delay, not a permanent loss.",
+      "A drink counts as found once it's in hand and back at the start.",
+      "Your team is done when every seeker has their drink."
+    ],
+    drink:[
+      "The drink you find is the drink you drink.",
+      "Slowest team owes an extra, or whatever the table sets."
+    ],
+    varies:"All of it. Worth pinning down first: whether relocating is allowed at all, how far counts as too far, and what the losing team actually owes."
+  },
+  {
+    slug:"cheers-governor", name:"Cheers to the Governor", code:"PTY-01", cat:"party", tag:"Party & endurance",
+    spec:{Players:"4+, more is better",Gear:"Nothing but drinks",Runtime:"Open-ended",Tempo:"Builds"},
+    setup:[
+      "Everyone in a circle. No cards, no table, nothing to set up.",
+      "Everyone needs their own drink."
+    ],
+    play:[
+      "Count around the circle, one number per person, from one up to twenty-one.",
+      "Whoever says twenty-one, the whole table says \"cheers to the governor\" and everyone drinks.",
+      "That person is now the governor and makes a new rule attached to a number — swap two numbers, replace a number with a word or a sound, make a number reverse the direction. Anything, as long as it's tied to a number.",
+      "Start again at one. Every rule ever made is still live.",
+      "Miscount, break a rule, or stall too long and you drink. The person on your left restarts from one.",
+      "It runs as long as the group wants. The rules only ever pile up."
+    ],
+    drink:[
+      "Everyone drinks at twenty-one.",
+      "Whoever breaks the count drinks alone."
+    ],
+    varies:"Whether stalling counts as a mistake, whether a rule may target a specific person, and whether the rule list ever gets wiped."
+  },
+  {
+    slug:"power-hour", name:"Power Hour", code:"PTY-02", cat:"party", tag:"Party & endurance",
+    spec:{Players:"Any number",Gear:"Shot glass each, light beer, a timer",Runtime:"Exactly 60 min",Tempo:"Attrition"},
+    note:"Sixty 1.5 oz shots is 90 oz of beer, which is seven and a half standard beers inside an hour. Go in knowing that number — it's the entire game, and it doesn't feel like seven and a half beers until suddenly it does.",
+    setup:[
+      "A shot glass per player and a timer that alerts every minute for an hour.",
+      "Beer only, and light beer — 4% ABV is a sensible ceiling and lower is better.",
+      "Eat first, and put water on the table next to the beer.",
+      "Optional and worth doing: a playlist cut into one-minute clips so the track change is the timer. Roughly fifteen songs' worth of material, or a premade power hour mix."
+    ],
+    play:[
+      "Every sixty seconds, one 1.5 oz shot of beer.",
+      "Sixty shots, sixty minutes. That's the whole game.",
+      "Nobody wins. There are people who finished the hour and people who didn't."
+    ],
+    sections:[
+      {title:"Before you start", steps:[
+        "Don't start one already drunk. The seven-and-a-half-beer figure assumes you're beginning from zero, and it stops being true the moment you aren't.",
+        "Beer only, and keep it light. Substituting anything stronger doesn't make it a harder version of the same game, it makes it a different quantity of alcohol entirely.",
+        "Eat beforehand and keep drinking water through the hour.",
+        "It's an hour with no off-ramp built in, so agree up front that stopping early is fine and nobody gets grief for it."
+      ]}
+    ],
+    drink:[
+      "One 1.5 oz shot of beer per minute, sixty times over.",
+      "Water between shots isn't cheating. It's the only reason anyone finishes."
+    ],
+    varies:"Whether a missed minute puts you out or you just catch up, shot size (1.5 oz is the standard), and whether a playlist runs the clock instead of a timer."
+  }
+];
+
+/* ================================================================
+   ▲▲▲  STOP EDITING HERE  ▲▲▲
+   ================================================================ */
+</script>
+
+<style>
+:root{
+  --paper:#E7EAF0;
+  --sheet:#F7F8FB;
+  --sheet-2:#EDF0F5;
+  --ink:#131B24;
+  --muted:#5D6A79;
+  --line:#C3CBD6;
+  --line-soft:#D7DDE6;
+  --red:#B8382A;
+  --red-wash:#F3E2DE;
+  --blue:#2C6B8B;
+  --blue-wash:#E1EAEF;
+  --amber:#8A6A18;
+  --focus:#2C6B8B;
+  --btn-fg:#FBF7F5;
+  --shadow:0 1px 0 rgba(19,27,36,.06), 0 10px 24px -18px rgba(19,27,36,.5);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0E141A;
+    --sheet:#171F28;
+    --sheet-2:#1D2732;
+    --ink:#E4EAF0;
+    --muted:#8D9CAB;
+    --line:#2E3A47;
+    --line-soft:#242F3A;
+    --red:#E1614F;
+    --red-wash:#2C1B18;
+    --blue:#77B5D4;
+    --blue-wash:#152530;
+    --amber:#D3AC55;
+    --focus:#77B5D4;
+    --btn-fg:#170D0A;
+    --shadow:0 1px 0 rgba(0,0,0,.4), 0 12px 28px -20px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0E141A;
+  --sheet:#171F28;
+  --sheet-2:#1D2732;
+  --ink:#E4EAF0;
+  --muted:#8D9CAB;
+  --line:#2E3A47;
+  --line-soft:#242F3A;
+  --red:#E1614F;
+  --red-wash:#2C1B18;
+  --blue:#77B5D4;
+  --blue-wash:#152530;
+  --amber:#D3AC55;
+  --focus:#77B5D4;
+  --btn-fg:#170D0A;
+  --shadow:0 1px 0 rgba(0,0,0,.4), 0 12px 28px -20px rgba(0,0,0,.9);
+}
+
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Source Serif 4",Georgia,serif;
+  font-size:16px;
+  line-height:1.6;
+  margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:1080px;
+  margin:0 auto;
+  padding-inline:20px;
+  padding-block:28px 64px;
+}
+h1,h2,h3,.disp{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;text-wrap:balance;margin:0}
+.mono,code,.code,dt,.chip,.tag,.btn,.spec dd{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+
+/* ---------- title block ---------- */
+.titleblock{
+  border:1.5px solid var(--ink);
+  background:var(--sheet);
+  box-shadow:var(--shadow);
+}
+.tb-main{
+  padding:26px 22px 20px;
+  border-bottom:1.5px solid var(--ink);
+}
+.tb-eyebrow{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--red);margin:0 0 10px;
+}
+h1{
+  font-size:clamp(34px,7.5vw,62px);
+  font-weight:800;
+  letter-spacing:-.025em;
+  line-height:.95;
+  text-transform:uppercase;
+}
+h1 .thin{font-weight:500;color:var(--muted);display:block;font-size:.42em;letter-spacing:.02em;margin-top:12px;text-transform:none;font-family:"Source Serif 4",serif}
+.tb-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+}
+.tb-cell{
+  padding:11px 14px;
+  border-right:1px solid var(--line);
+  display:flex;flex-direction:column;gap:3px;
+}
+.tb-cell:last-child{border-right:none}
+.tb-cell b{
+  font-family:"IBM Plex Mono",monospace;
+  font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--muted);font-weight:500;
+}
+.tb-cell span{font-family:"IBM Plex Mono",monospace;font-size:14px;font-weight:500}
+
+/* ---------- controls ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.controls{
+  display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+  margin:26px 0 8px;
+}
+.chip{
+  appearance:none;cursor:pointer;
+  background:transparent;color:var(--muted);
+  border:1px solid var(--line);
+  padding:7px 13px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;
+  font-weight:500;
+  transition:.14s ease;
+}
+.chip:hover{color:var(--ink);border-color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn{
+  appearance:none;cursor:pointer;
+  background:var(--red);color:var(--btn-fg);border:1px solid var(--red);
+  padding:7px 15px;font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;font-weight:600;
+  margin-left:auto;
+}
+.btn:hover{filter:brightness(1.08)}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+
+/* ---------- index ---------- */
+.index{
+  border-top:1px solid var(--line);
+  border-bottom:1px solid var(--line);
+  padding:12px 0;
+  margin:14px 0 34px;
+  display:flex;flex-wrap:wrap;gap:4px 22px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;
+}
+.index a{color:var(--muted);text-decoration:none;border-bottom:1px solid transparent;white-space:nowrap}
+.index a:hover{color:var(--red);border-bottom-color:var(--red)}
+.index a .n{color:var(--blue);margin-right:7px}
+
+/* ---------- sheets ---------- */
+.sheets{display:flex;flex-direction:column;gap:26px}
+.sheet{
+  background:var(--sheet);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  scroll-margin-top:16px;
+}
+.sheet.flash{animation:flash 1.6s ease}
+@keyframes flash{0%,100%{box-shadow:var(--shadow)}18%{box-shadow:0 0 0 3px var(--red)}}
+@media (prefers-reduced-motion:reduce){.sheet.flash{animation:none;outline:3px solid var(--red)}}
+
+.sheet-head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 14px;
+  padding:16px 20px 14px;
+  border-bottom:1.5px solid var(--ink);
+}
+.sheet-head .code{
+  font-size:11px;letter-spacing:.13em;color:var(--blue);font-weight:600;
+  border:1px solid var(--blue);padding:2px 6px;
+}
+.sheet-head h2{
+  font-size:clamp(21px,3.6vw,29px);font-weight:800;letter-spacing:-.018em;text-transform:uppercase;
+}
+.sheet-head .tag{
+  margin-left:auto;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);
+}
+.sheet-head .tag.todo{color:var(--amber)}
+
+.spec{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));
+  margin:0;border-bottom:1px solid var(--line-soft);
+  background:var(--sheet-2);
+}
+.spec>div{padding:9px 20px;border-right:1px solid var(--line-soft)}
+.spec>div:last-child{border-right:none}
+dt,.flabel{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);font-family:"IBM Plex Mono",monospace;display:block}
+.spec dd{margin:2px 0 0;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums}
+
+.body{display:grid;grid-template-columns:1.55fr 1fr;gap:0}
+.body.nolane{grid-template-columns:1fr}
+.body.nolane .main{border-right:none}
+.main{padding:20px 20px 24px;border-right:1px solid var(--line-soft);min-width:0}
+.rail{padding:20px;display:flex;flex-direction:column;gap:18px;min-width:0;background:var(--sheet-2)}
+@media (max-width:820px){
+  .body{grid-template-columns:1fr}
+  .main{border-right:none;border-bottom:1px solid var(--line-soft)}
+  .spec>div{border-right:none;border-bottom:1px solid var(--line-soft)}
+  .spec>div:last-child{border-bottom:none}
+}
+
+.main section+section{margin-top:22px}
+h3{
+  font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;
+  color:var(--red);margin:0 0 9px;
+  padding-bottom:6px;border-bottom:1px solid var(--line-soft);
+}
+.rail h3{color:var(--ink)}
+.rail .drink h3{color:var(--red)}
+ol,ul{margin:0;padding-left:1.35em}
+ol li,ul li{margin-bottom:7px;max-width:64ch}
+ol li::marker{font-family:"IBM Plex Mono",monospace;font-size:.82em;color:var(--blue)}
+ul li::marker{color:var(--muted)}
+.main p{margin:0 0 8px;max-width:64ch}
+.cards{list-style:none;padding:0;margin:0}
+.cards li{display:flex;gap:12px;margin-bottom:7px;align-items:baseline}
+.cards .rank{
+  font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:13px;
+  color:var(--red);min-width:2.1em;flex:none;text-align:right;
+}
+.phase{
+  font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--blue);margin:0 0 8px;
+}
+
+.panel.drink{border-left:3px solid var(--red);background:var(--red-wash);padding:12px 14px}
+.panel.drink ul li{margin-bottom:5px;font-size:15px}
+.note{
+  background:var(--blue-wash);border-left:3px solid var(--blue);
+  padding:11px 14px;margin:0 0 18px;font-size:14.5px;color:var(--muted);
+  line-height:1.55;
+}
+.panel.var p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.55}
+
+/* ---------- footer ---------- */
+.ops{
+  margin-top:44px;border-top:1.5px solid var(--ink);padding-top:18px;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;
+}
+.ops h3{border-bottom:none;padding-bottom:0}
+.ops p{margin:0;font-size:14.5px;color:var(--muted);line-height:1.55}
+.colophon{
+  margin-top:30px;font-family:"IBM Plex Mono",monospace;font-size:11px;
+  letter-spacing:.06em;color:var(--muted);
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="titleblock">
+    <div class="tb-main">
+      <p class="tb-eyebrow">House rulebook &middot; current rotation</p>
+      <h1>The Rotation<br>Rulebook
+        <span class="thin">The whole rotation, written down once, so nobody has to argue about redemption at 11pm.</span>
+      </h1>
+    </div>
+    <div class="tb-grid">
+      <div class="tb-cell"><b>Sheets</b><span id="tb-count">&mdash;</span></div>
+      <div class="tb-cell"><b>Categories</b><span id="tb-cats">&mdash;</span></div>
+      <div class="tb-cell"><b>Revision</b><span id="tb-rev">&mdash;</span></div>
+    </div>
+  </div>
+
+  <div class="controls" role="group" aria-label="Filter games">
+    <div class="chips" id="chips"></div>
+    <button class="btn" id="pick">Pick tonight's game</button>
+  </div>
+
+  <nav class="index" id="index" aria-label="Game index"></nav>
+
+  <main class="sheets" id="sheets"></main>
+
+  <section class="ops">
+    <div>
+      <h3>Pours</h3>
+      <p>Match fills honestly at the start of a round. Uneven pours are where every flip cup argument comes from, and they're how someone ends up drinking twice what they signed up for.</p>
+    </div>
+    <div>
+      <h3>Outs</h3>
+      <p>Anybody can sub a water or tap out of a chug without explaining themselves. A game that needs someone forced into it isn't the game &mdash; it's just pressure with a table.</p>
+    </div>
+    <div>
+      <h3>Endings</h3>
+      <p>Driver picked before the first rack. Water between games, not after them. Beer ball and the bus both hit harder than they look on paper &mdash; don't stack them back to back.</p>
+    </div>
+  </section>
+
+  <p class="colophon" id="colophon">&mdash;</p>
+</div>
+<script>
+/* The Rotation Rulebook — rendering. You shouldn't need to touch this file.
+   All the content lives in games.js. */
+
+(function () {
+  "use strict";
+
+  var esc = function (s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c];
+    });
+  };
+  var li = function (arr) {
+    return arr.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("");
+  };
+  var steps = function (title, arr) {
+    return "<section><h3>" + esc(title) + "</h3><ol>" + li(arr) + "</ol></section>";
+  };
+
+  function specHTML(spec) {
+    return '<dl class="spec">' + Object.keys(spec).map(function (k) {
+      return "<div><dt>" + esc(k) + "</dt><dd>" + esc(spec[k]) + "</dd></div>";
+    }).join("") + "</dl>";
+  }
+
+  function mainHTML(g) {
+    var h = "";
+    if (g.note) h += '<p class="note">' + esc(g.note) + "</p>";
+
+    if (g.phases) {
+      h += g.phases.map(function (p) {
+        return '<section><p class="phase">' + esc(p.title) + "</p><ol>" + li(p.steps) + "</ol></section>";
+      }).join("");
+    } else {
+      if (g.setup) h += steps("Setup", g.setup);
+      if (g.play) h += steps("Play", g.play);
+    }
+
+    if (g.cards) {
+      h += '<section><h3>Card assignments</h3><ul class="cards">' + g.cards.map(function (c) {
+        return '<li><span class="rank">' + esc(c[0]) + "</span><span>" + esc(c[1]) + "</span></li>";
+      }).join("") + "</ul></section>";
+    }
+
+    if (g.sections) {
+      h += g.sections.map(function (s) { return steps(s.title, s.steps); }).join("");
+    }
+
+    if (g.close) h += "<section><h3>Closing it out</h3><p>" + esc(g.close) + "</p></section>";
+    return h;
+  }
+
+  function railHTML(g) {
+    var h = "";
+    if (g.drink) h += '<section class="panel drink"><h3>Drink rules</h3><ul>' + li(g.drink) + "</ul></section>";
+    if (g.varies) h += '<section class="panel var"><h3>Varies by house</h3><p>' + esc(g.varies) + "</p></section>";
+    return h;
+  }
+
+  /* ---------- render ---------- */
+
+  var sheetsEl = document.getElementById("sheets");
+
+  sheetsEl.innerHTML = GAMES.map(function (g) {
+    var rail = railHTML(g);
+    return '<article class="sheet" id="g-' + esc(g.slug) + '" data-cat="' + esc(g.cat) + '">' +
+      '<header class="sheet-head"><span class="code">' + esc(g.code) + "</span>" +
+      "<h2>" + esc(g.name) + "</h2>" +
+      '<span class="tag">' + esc(g.tag) + "</span></header>" +
+      (g.spec ? specHTML(g.spec) : "") +
+      '<div class="body' + (rail ? "" : " nolane") + '"><div class="main">' + mainHTML(g) + "</div>" +
+      (rail ? '<aside class="rail">' + rail + "</aside>" : "") +
+      "</div></article>";
+  }).join("");
+
+  document.getElementById("index").innerHTML = GAMES.map(function (g) {
+    return '<a href="#g-' + esc(g.slug) + '"><span class="n">' + esc(g.code) + "</span>" + esc(g.name) + "</a>";
+  }).join("");
+
+  /* ---------- title block ---------- */
+
+  var usedCats = CATEGORIES.filter(function (c) {
+    return GAMES.some(function (g) { return g.cat === c.key; });
+  });
+
+  document.getElementById("tb-count").textContent = GAMES.length;
+  document.getElementById("tb-cats").textContent = usedCats.length;
+  document.getElementById("tb-rev").textContent = META.revision + " · " + META.updated;
+  document.getElementById("colophon").textContent =
+    "Rev " + META.revision + " — " + GAMES.length + " sheets. Edit games.js to change anything on this page.";
+
+  /* ---------- filters ---------- */
+
+  var chipsEl = document.getElementById("chips");
+  chipsEl.innerHTML =
+    '<button class="chip" data-filter="all" aria-pressed="true">All ' + GAMES.length + "</button>" +
+    usedCats.map(function (c) {
+      return '<button class="chip" data-filter="' + esc(c.key) + '" aria-pressed="false">' + esc(c.label) + "</button>";
+    }).join("");
+
+  chipsEl.addEventListener("click", function (e) {
+    var btn = e.target.closest(".chip");
+    if (!btn) return;
+    var f = btn.dataset.filter;
+    [].forEach.call(chipsEl.querySelectorAll(".chip"), function (x) {
+      x.setAttribute("aria-pressed", String(x === btn));
+    });
+    [].forEach.call(document.querySelectorAll(".sheet"), function (s) {
+      s.hidden = !(f === "all" || s.dataset.cat === f);
+    });
+  });
+
+  /* ---------- random pick ---------- */
+
+  document.getElementById("pick").addEventListener("click", function () {
+    var open = [].filter.call(document.querySelectorAll(".sheet"), function (s) { return !s.hidden; });
+    if (!open.length) return;
+    var s = open[Math.floor(Math.random() * open.length)];
+    var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    s.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    s.classList.remove("flash");
+    void s.offsetWidth;
+    s.classList.add("flash");
+  });
+})();
+</script>
+</body>
+</html>
